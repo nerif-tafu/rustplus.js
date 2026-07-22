@@ -2,6 +2,7 @@
 
 const axios = require('axios');
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const { v4: uuidv4 } = require('uuid');
 const commandLineArgs = require('command-line-args');
 const commandLineUsage = require('command-line-usage');
@@ -76,6 +77,20 @@ async function registerWithRustPlus(authToken, expoPushToken) {
 async function linkSteamWithRustPlus() {
     return new Promise((resolve, reject) => {
         const app = express();
+
+        /**
+         * This server is short-lived - it exists only for the interactive
+         * pairing flow and is closed as soon as the callback fires - but
+         * app.listen() below binds every interface, so it is reachable from the
+         * local network while it runs. The pairing flow needs only a handful of
+         * requests, so a small allowance is ample.
+         */
+        app.use(rateLimit({
+            windowMs: 5 * 60 * 1000,
+            max: 100,
+            standardHeaders: true,
+            legacyHeaders: false,
+        }));
 
         // register pair web page
         app.get('/', (req, res) => {
