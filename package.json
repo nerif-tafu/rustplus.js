@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/liamcottle/rustplus.js#readme",
   "dependencies": {
-    "@liamcottle/push-receiver": "^0.0.4",
+    "@liamcottle/push-receiver": "git+https://github.com/nerif-tafu/push-receiver.git#e4c82f1e5825483195b13ae8ad7935a3cb90ddc1",
     "axios": "^1.18.1",
     "chrome-launcher": "^1.2.1",
     "command-line-args": "^6.0.2",
